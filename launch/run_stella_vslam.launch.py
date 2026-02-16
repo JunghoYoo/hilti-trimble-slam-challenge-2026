@@ -4,7 +4,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
 
 
@@ -14,7 +14,7 @@ def generate_launch_description():
                                  "config", "hilti_stella_vslam", "orb_vocab.fbow")
 
     default_config = os.path.join(get_package_share_directory("challenge_tools_ros"),
-                                  "config", "hilti_stella_vslam", "fisheye.yaml")
+                                  "config", "hilti_stella_vslam", "equirectangular.yaml")
 
     vocab_arg = DeclareLaunchArgument("vocab", default_value=default_vocab)
     config_arg = DeclareLaunchArgument("config_path", default_value=default_config)
@@ -49,7 +49,36 @@ def generate_launch_description():
             "/camera/image_raw",
             "mono8"
         ],
-        condition=IfCondition(LaunchConfiguration("image_conversion"))
+        condition=IfCondition(
+            PythonExpression([
+                "'",
+                LaunchConfiguration("image_conversion"),
+                "'.lower() == 'true' and '",
+                config_path,
+                "'.endswith('fisheye.yaml')",
+            ])
+        )
+    )
+
+    node_transport_pano = Node(
+        package="challenge_tools_ros",
+        executable="image_conversion_node.py",
+        namespace=namespace,
+        output="screen",
+        arguments=[
+            "/pano/image_raw/compressed",
+            "/camera/image_raw",
+            "mono8"
+        ],
+        condition=IfCondition(
+            PythonExpression([
+                "'",
+                LaunchConfiguration("image_conversion"),
+                "'.lower() == 'true' and not '",
+                config_path,
+                "'.endswith('fisheye.yaml')",
+            ])
+        )
     )
 
     return LaunchDescription([
@@ -59,4 +88,5 @@ def generate_launch_description():
         image_conversion_arg,
         node_slam,
         node_transport,
+        node_transport_pano,
     ])

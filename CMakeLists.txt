@@ -40,6 +40,7 @@ include_directories(
 ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
+  challenge_tools_ros/bag_helper/image_stitching.py
   challenge_tools_ros/bag_helper/ros2bag_to_euroc.py
   challenge_tools_ros/bag_helper/ros2bag_to_ros1bag.py
   

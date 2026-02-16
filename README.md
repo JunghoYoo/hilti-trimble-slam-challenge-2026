@@ -68,6 +68,7 @@ If you find this dataset useful, please consider giving it a ⭐ and citing it i
 - [Challenge Tools ROS](#challenge-tools-ros)
    * [Install Challenge Tools](#install-challenge-tools)
    * [Image Decompression](#image-decompression-1)
+   * [Image Stitching](#image-stitching)
    * [Image Inversion](#image-inversion)
    * [OpenVINS Example](#openvins-example)
       + [Install OpenVINS with ROS2](#install-openvins-with-ros2)
@@ -377,6 +378,23 @@ Images are stored as the `CompressedImage` type in our ROS2 bags. We provide a r
 ros2 run challenge_tools_ros image_conversion_node.py /cam0/image_raw/compressed /cam1/image_raw/compressed /cam0/image_raw /cam1/image_raw
 ```
 
+<!-- TOC --><a name="image-stitching"></a>
+## Image Stitching
+We are providing the two raw fisheye images only for the challenge because stitching them into a 360° equirectangular image is not mathematically or geometrically exact and requires certain assumptions.
+
+This is because a dual-fisheye camera consists of two lenses separated by a small but non-zero baseline, meaning they do not share the same optical center. However, generating a single equirectangular image implicitly assumes a single effective viewpoint (i.e., a central projection model). Without per-pixel depth information, it is impossible to correctly reconcile the parallax between the two lenses. Projecting both fisheye images onto a common unit sphere therefore introduces geometric inconsistencies, since the rays originate from different optical centers.
+
+For people who are still interested in working with 360° equirectangular images, we provide a reference image stitching script. This script assumes a large radius for the virtual projection sphere (it is not insta360 official stitching algorithm): 
+```
+ros2 run challenge_tools_ros image_stitching.py \
+    --bag   rosbag/ \
+    --yaml  config/hilti_openvins/kalibr_imucam_chain.yaml \
+    --mask0 config/hilti_openvins/mask_cam0.png \
+    --mask1 config/hilti_openvins/mask_cam1.png \
+    --out   rosbag_pano/ \
+    --use-torch
+```
+
 <!-- TOC --><a name="image-inversion"></a>
 ## Image Inversion
 
@@ -462,36 +480,23 @@ Stella-VSLAM is another open-source vSLAM system. It directly processes 360° eq
 <!-- TOC --><a name="run-stella-vslam"></a>
 ### Run Stella-VSLAM
 
+First, stitch the fisheye images into 360° equirectangular images using either our [reference script](challenge_tools_ros/bag_helper/image_stitching.py) or your own stitching algorithm.
+
 In **Terminal 1**, start Stella-VSLAM:
 
 ```
-ros2 launch challenge_tools_ros run_stella_vslam.launch.py \
-    image_conversion:=false \
-    config_path:=/path/to/challenge_tools_ros/config/hilti_stella_vslam/fisheye.yaml
+ros2 launch challenge_tools_ros run_stella_vslam.launch.py
 ```
 
-By default, the `config_path` is set to `fisheye.yaml`, which is the monocular configuration for the front camera. <br>
+In **Terminal 2**, play the ros bag:
 
-Since we only provide raw sensor data from the Insta360, which contains separate images from the front and back lenses, you would need to stitch the images from both lenses if you are interested in 360° equirectangular SLAM. You must also modify the `equirectangular.yaml` file according to the resolution of your stitched image and set the `config_path`.
+```
+ros2 bag play /path/to/stitched/ros2/bag/folder -p --rate 0.5
+```
 
 An example of Stella-VSLAM running on stitched images is shown below:
-
 <div align="center">
-  <img src="media/floor1_stella_vslam_stitch.png" alt="floor1_stella_vslam_stitch" width="50%"/>
+  <img src="media/floor2_stella_vslam_stitch.png" alt="floor1_stella_vslam_stitch" width="50%"/>
 </div>
 
-In **Terminal 2**, launch the `image_conversion_node` if the bag stores images as `CompressedImage`:
-
-```
-ros2 run challenge_tools_ros image_conversion_node.py /cam0/image_raw/compressed /camera/image_raw mono8
-```
-
-Here, `/cam0/image_raw/compressed` is the compressed image topic in the bag, and `/camera/image_raw` is the image topic that Stella-VSLAM subscribes to. 
-
-In **Terminal 3**, play the ros bag:
-
-```
-ros2 bag play /path/to/ros2/bag/folder -p
-```
-
-**Known Issue:** Sometimes the Stella-VSLAM ROS wrapper may fail to properly subscribe to image messages. If this happens, terminate the `image_conversion_node` in Terminal 2 using `Ctrl+C` and relaunch it.
+**Known Issue:** Sometimes the Stella-VSLAM ROS wrapper may fail to properly subscribe to image messages. If this happens, run the `image_conversion_node` in a separate terminal instead of including it in the launch file. Then repeatedly terminate and relaunch the node until the image is displayed properly.

@@ -4,18 +4,18 @@ Camera:
   model: "equirectangular"
 
   fps: 30.0
-  cols: 1920
-  rows: 960
+  cols: 2944
+  rows: 1472
 
   color_order: "RGB"
 
 Preprocessing:
   min_size: 800
-  mask_rectangles:
-    - [0.0, 1.0, 0.0, 0.1]
-    - [0.0, 1.0, 0.84, 1.0]
-    - [0.0, 0.2, 0.7, 1.0]
-    - [0.8, 1.0, 0.7, 1.0]
+  # mask_rectangles:
+  #   - [0.0, 1.0, 0.0, 0.1]
+  #   - [0.0, 1.0, 0.84, 1.0]
+  #   - [0.0, 0.2, 0.7, 1.0]
+  #   - [0.8, 1.0, 0.7, 1.0]
 
 Feature:
   name: "default ORB feature extraction setting"
