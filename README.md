@@ -331,7 +331,7 @@ Each run was captured using the **Insta360 One-RS 1-Inch Edition** ([Insta360 we
 
 - Sensors and Lenses: The camera is equipped with two 1-inch CMOS sensors (co-engineered with Leica). Each lens is a Leica Summicron-A 6.52 mm f/2.2 fisheye, providing an extremely wide field of view (approx. 200° per lens) for full 360° coverage.
 
-- Shutter: The sensor uses an electronic (rolling) shutter.
+- Shutter: The sensor uses an electronic (rolling) shutter. The rolling shutters of the two cameras are well synchronized, including their exposure timings.
 
 - Integrated IMU: The camera includes a 6-axis Inertial Measurement Unit (3-axis gyroscope + 3-axis accelerometer). IMU data is internally recorded and embedded into the video metadata.
 
