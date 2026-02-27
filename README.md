@@ -349,7 +349,7 @@ A LiDAR-Inertial mapping device containing a **Hesai XT32 LiDAR** ([Hesai websit
 
 We provide camera and IMU calibration results for both the _pinhole equidistant_ camera model and the _enhanced unified_ camera model (EUCM) [here](https://drive.google.com/drive/folders/1kYxgaCAtsVLe1B1MGsc2kR6RnByloHUV?usp=sharing). The original calibration runs are also available in the [public drive](https://drive.google.com/drive/folders/1kYxgaCAtsVLe1B1MGsc2kR6RnByloHUV?usp=drive_link). 
 
-Calibration for the EUCM was performed using the open-source [Kalibr](https://github.com/ethz-asl/kalibr) toolbox. For the pinhole equidistant camera model, we used an internal calibration tool, as Kalibr’s implementation was unable to successfully calibrate such large-FOV fisheye cameras using that model. In addition, we have added support for EUCM to [OpenVINS](https://github.com/Hilti-Research/open_vins) so as to demonstrate that OpenVINS can process all of these recordings.
+Calibration for the EUCM was performed using the open-source [Kalibr](https://github.com/ethz-asl/kalibr) toolbox. Since pinhole–equidistant camera model is widely supported by most existing SLAM systems, we fit its parameters to the EUCM intrinsics, as Kalibr’s implementation was unable to successfully calibrate such large-FOV fisheye cameras using this model. In addition, we have added support for EUCM to [OpenVINS](https://github.com/Hilti-Research/open_vins) so as to demonstrate that OpenVINS can process all of these recordings.
 
 
 <!-- TOC --><a name="challenge-tools-ros"></a>
