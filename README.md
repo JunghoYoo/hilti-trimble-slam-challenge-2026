@@ -41,6 +41,15 @@ If you find this dataset useful, please consider giving it a ⭐ and citing it i
    urldate = {2026-02-01}
 }
 ```
+## 🔔 News
+
+- **[2026-03-05]** ℹ️ Added rolling shutter [specifications](config/hilti_openvins/rs_config.yaml).
+- **[2026-03-03]** 📐 Added floor plans in `dxf` format on [Google Drive](https://drive.google.com/drive/folders/1mr65VVF4LiNbH2ABPLzBKMCwxoWKiDz7?usp=drive_link).  
+  > **Note:** These floor plans are not officially registered.
+- **[2026-02-27]** 📷 Updated camera parameters and intrinsic calibration.
+- **[2026-02-16]** 🖼️ Introduced [image stitching script](challenge_tools_ros/bag_helper/image_stitching.py) for dataset post-processing.
+- **[2026-02-16]** 🎨 Added custom image encoding options in `image_conversion_node`.
+- **[2026-02-03]** 🗺️ Fixed `floor_UG1_2025-05-19_run_1` static transformation.
 
 <!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
 # Table of Contents
