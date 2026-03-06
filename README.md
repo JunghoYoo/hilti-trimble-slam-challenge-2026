@@ -400,7 +400,7 @@ ros2 run challenge_tools_ros image_stitching.py \
     --yaml  config/hilti_openvins/kalibr_imucam_chain.yaml \
     --mask0 config/hilti_openvins/mask_cam0.png \
     --mask1 config/hilti_openvins/mask_cam1.png \
-    --out   rosbag_pano/ \
+    --out   rosbag_pano \
     --use-torch
 ```
 
